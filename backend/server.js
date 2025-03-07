@@ -9,11 +9,17 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+;
+
 app.use(cors({
-  origin: "*",  // ✅ Allow requests from any origin (temporary fix)
-  methods: "GET, POST, OPTIONS",
-  allowedHeaders: "Content-Type, Authorization"
+  origin: ["http://localhost:3000", "https://google-job-scraper.vercel.app"],  // ✅ Allow Localhost & Vercel Frontend
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
+
+// ✅ Ensure preflight requests are handled properly
+app.options("*", cors());
 
 // ✅ OR, for better security, restrict to your frontend URL:
 app.use(cors({
@@ -24,6 +30,7 @@ app.use(cors({
 
 // ✅ Ensure preflight requests are handled properly:
 app.options("*", cors());
+
 app.use(express.json());
 
 // ✅ Cache to store API responses temporarily
