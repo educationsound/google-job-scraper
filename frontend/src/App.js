@@ -15,7 +15,8 @@ function App() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("http://localhost:5001/scrape-jobs", {
+      const response = await axios.get("https://your-backend-url.onrender.com/scrape-jobs",
+ {
         params: {
           keyword,
           location: location || "United States",
@@ -77,21 +78,22 @@ function App() {
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       
       <h2>Results</h2>
-      {jobs.length === 0 && !loading && !error && <p>No jobs found yet. Try scraping!</p>}
-      <ul>
-        {jobs.map((job, index) => (
-          <li key={index} style={{ marginBottom: "15px" }}>
-            <strong>{job.role}</strong> at {job.company} <br />
-            <strong>Location:</strong> {job.location} <br />
-            <strong>Salary:</strong> {job.salary} <br />
-            <a href={job.url} target="_blank" rel="noopener noreferrer">
-              Apply Here
-            </a>
-            <br />
-            <span>ATS Keywords: {job.ats_keywords.join(", ") || "None detected"}</span>
-          </li>
-        ))}
-      </ul>
+{jobs.length === 0 && !loading && !error && <p>No jobs found yet. Try scraping!</p>}
+<ul>
+  {jobs.map((job, index) => (
+    <li key={index} style={{ marginBottom: "15px" }}>
+      <strong>{job.role}</strong> at {job.company} <br />
+      <strong>Location:</strong> {job.location} <br />
+      <strong>Salary:</strong> {job.salary} <br />
+      <a href={job.url} target="_blank" rel="noopener noreferrer">
+        Apply Here
+      </a>
+      <br />
+      <span>ATS Keywords: {job.ats_keywords.join(", ") || "None detected"}</span>
+    </li>
+  ))}
+</ul>
+
 
       {loading && <p>Loading more jobs...</p>}
       

@@ -36,3 +36,33 @@
     transform: rotate(360deg);
   }
 }
+
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.job-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  transition: 0.3s;
+}
+
+.job-card:hover {
+  background-color: #f0f0f0;
+}
+
+.job-card a {
+  color: blue;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.job-card a:hover {
+  text-decoration: underline;
+}
+
