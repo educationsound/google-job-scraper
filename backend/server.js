@@ -10,10 +10,20 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 app.use(cors({
-  origin: "*", // Or explicitly allow your frontend URL: "https://google-job-scraper.vercel.app"
-  methods: "GET,POST",
-  allowedHeaders: "Content-Type"
+  origin: "*",  // ✅ Allow requests from any origin (temporary fix)
+  methods: "GET, POST, OPTIONS",
+  allowedHeaders: "Content-Type, Authorization"
 }));
+
+// ✅ OR, for better security, restrict to your frontend URL:
+app.use(cors({
+  origin: "https://google-job-scraper.vercel.app",
+  methods: "GET, POST, OPTIONS",
+  allowedHeaders: "Content-Type, Authorization"
+}));
+
+// ✅ Ensure preflight requests are handled properly:
+app.options("*", cors());
 app.use(express.json());
 
 // ✅ Cache to store API responses temporarily
