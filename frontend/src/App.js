@@ -11,27 +11,23 @@ function App() {
   const loaderRef = useRef(null);  // Ref for scroll detection
 
   // ✅ Fetch jobs from API
-  const backendUrl = "https://your-backend-url.onrender.com";  // ✅ Replace with actual Render backend URL
+  const backendUrl = "https://google-job-scraper-1.onrender.com";  // ✅ Replace with actual Render backend URL
 
   const fetchJobs = async (token = null) => {
-      setLoading(true);
-      setError(null);
-      try {
-          const response = await axios.get(`${backendUrl}/scrape-jobs`, {
-              params: {
-                  keyword,
-                  location: location || "United States",
-                  next_page_token: token,
-              },
-                  withCredentials: true  // ✅ Ensure credentials are sent (if required)
-          });
-          setJobs(response.data.jobs);
-          setNextPageToken(response.data.next_page_token);
-      } catch (err) {
-          setError(err.response?.data?.error || "Failed to fetch jobs");
-      }
-      setLoading(false);
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`${backendUrl}/scrape-jobs`, {
+        params: { keyword, location: location || "United States", next_page_token: token }
+      });
+      setJobs(response.data.jobs);
+      setNextPageToken(response.data.next_page_token);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to fetch jobs");
+    }
+    setLoading(false);
   };
+  
   
 
   // ✅ Trigger job search when clicking "Scrape Jobs"

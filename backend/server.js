@@ -11,25 +11,30 @@ const PORT = process.env.PORT || 5001;
 
 ;
 
+// ✅ Single CORS configuration
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://google-job-scraper.vercel.app"
+];
+
 app.use(cors({
-  origin: ["http://localhost:3000", "https://google-job-scraper.vercel.app"],  // ✅ Allow Localhost & Vercel Frontend
+  origin: allowedOrigins,  // ✅ Match frontend origins exactly
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
 }));
 
-// ✅ Ensure preflight requests are handled properly
+// ✅ Handle preflight requests
 app.options("*", cors());
 
-// ✅ OR, for better security, restrict to your frontend URL:
-app.use(cors({
-  origin: "https://google-job-scraper.vercel.app",
-  methods: "GET, POST, OPTIONS",
-  allowedHeaders: "Content-Type, Authorization"
-}));
+// // ✅ OR, for better security, restrict to your frontend URL:
+// app.use(cors({
+//   origin: "https://google-job-scraper.vercel.app",
+//   methods: "GET, POST, OPTIONS",
+//   allowedHeaders: "Content-Type, Authorization"
+// }));
 
-// ✅ Ensure preflight requests are handled properly:
-app.options("*", cors());
+// // ✅ Ensure preflight requests are handled properly:
+// app.options("*", cors());
 
 app.use(express.json());
 
