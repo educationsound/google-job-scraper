@@ -12,6 +12,58 @@ const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json());
 
+// ✅ Cache to store API responses temporarily
+const cache = new Map();
+
+app.get("/", (req, res) => {
+    console.log("✅ Root URL hit");
+    res.send("✅ Google Jobs API is running...");
+});
+
+app.get("/scrape-jobs", async (req, res) => {
+    const { keyword, location } = req.query;
+    const cacheKey = `${keyword}-${location}`;
+
+    // ✅ Check if results exist in cache
+    if (cache.has(cacheKey)) {
+        console.log("✅ Serving from cache:", cacheKey);
+        return res.json({ jobs: cache.get(cacheKey) });
+    }
+
+    if (!keyword) {
+        console.log("❌ Missing keyword!");
+        return res.status(400).json({ error: "Keyword is required" });
+    }
+
+    if (!process.env.SERPAPI_KEY) {
+        console.log("❌ Missing SerpAPI key in .env");
+        return res.status(500).json({ error: "Server configuration error: Missing API key" });
+    }
+
+    try {
+        console.log("🔄 Fetching jobs from SerpAPI...");
+        const response = await axios.get("https://serpapi.com/search", {
+            params: {
+                engine: "google_jobs",
+                q: keyword,
+                location: location || "United States",
+                api_key: process.env.SERPAPI_KEY
+            }
+        });
+
+        const jobResults = response.data.jobs_results || [];
+
+        // ✅ Store in cache for 1 hour (3600000 ms)
+        cache.set(cacheKey, jobResults);
+        setTimeout(() => cache.delete(cacheKey), 3600000);
+
+        res.json({ jobs: jobResults });
+    } catch (error) {
+        console.error("🔥 Error fetching jobs:", error.response ? error.response.data : error.message);
+        res.status(500).json({ error: "API request failed", details: error.message });
+    }
+});
+
 app.get("/", (req, res) => {
     console.log("✅ Root URL hit");
     res.send("✅ Google Jobs API is running...");
