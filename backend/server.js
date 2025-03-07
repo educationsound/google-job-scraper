@@ -9,7 +9,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-app.use(cors());
+app.use(cors({
+  origin: "*", // Or explicitly allow your frontend URL: "https://google-job-scraper.vercel.app"
+  methods: "GET,POST",
+  allowedHeaders: "Content-Type"
+}));
 app.use(express.json());
 
 // ✅ Cache to store API responses temporarily
